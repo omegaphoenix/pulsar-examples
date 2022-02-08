@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "downlevelIteration": true,
+    "noEmitOnError": true,
+    "strict": true,
+    "declaration": true,
+    "inlineSourceMap": true,
+    "outDir": "lib",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "target": "es2018",
+    "lib": [
+      "es2018"
+    ],
+    "rootDirs": [
+      "src"
+    ]
+  },
+  "include": ["./src/**/*"],
+  "jest": {
+    "mapCoverage": true
+  }
+}
