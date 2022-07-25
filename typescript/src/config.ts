@@ -20,6 +20,7 @@ export const Config = t.type({
     port: t.number,
     tenant: t.string,
     namespace: t.string,
+    topic: t.string,
     token: t.string,
   }),
 });

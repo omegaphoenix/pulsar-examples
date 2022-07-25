@@ -1,6 +1,6 @@
 import * as pulsar from 'pulsar-client';
 import * as fs from 'mz/fs';
-import { map, delay } from 'bluebird';
+import { delay } from 'bluebird';
 
 import config from './config';
 
@@ -20,8 +20,9 @@ function createPulsarClient(): pulsar.Client {
 
 // NOTE: re-create reader on message read timeout to avoid unexpected stall caused by offloading
 const NEXT_MESSAGE_TIMEOUT_MILLIS = 30 * 1000;
-async function readTopic(client: pulsar.Client, topic: string): Promise<void> {
-  const fullTopic = `${config.pulsar.tenant}/${config.pulsar.namespace}/${topic}`;
+async function readTopic(client: pulsar.Client): Promise<void> {
+  const { tenant, namespace, topic } = config.pulsar;
+  const fullTopic = `${tenant}/${namespace}/${topic}`;
   const fileName = `data/${topic}.jsonl`;
 
   try {
@@ -82,20 +83,12 @@ async function readTopic(client: pulsar.Client, topic: string): Promise<void> {
 }
 
 async function main(): Promise<void> {
-  const topics = ['flex_cv_pose_023eb4ac-5858-4729-a2a8-99fb876fecb6'];
   const client = createPulsarClient();
-  await map(
-    topics,
-    async (topic) => {
-      try {
-        await delay(Math.floor(Math.random() * 30000));
-        await readTopic(client, topic);
-      } catch (err) {
-        console.log(`FAILED AT ${err}`);
-      }
-    },
-    { concurrency: 50 },
-  );
+  try {
+    await readTopic(client);
+  } catch (err) {
+    console.log(`FAILED AT ${err}`);
+  }
 }
 
 // eslint-disable-next-line
